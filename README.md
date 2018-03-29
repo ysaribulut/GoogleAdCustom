@@ -15,14 +15,10 @@ Place this Javascript file to at the bottom of your page.
 ```
 
 ### Installing
-
-After that you have call the Init function to initialize this component
+You don't need to call any function to initialize
 You can replace Slot and Pub Code in GoogleAdCustom.js file.
 
-```
-GoogleAdCustom.Init();
-```
-this Init function will find every 
+this component will find every 
 ```<gad data-ad="970x90"></gad>``` 
 elements and change it with the ad
 
