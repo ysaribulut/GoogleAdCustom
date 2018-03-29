@@ -3,6 +3,7 @@
  *  You can dynamically change and add your ads.
  *  This js only needs Config.json file path
  *  Example ad element = <gad data-ad="970x90"></gad>
+ *  Example Custom Ad Element = <gad data-ad="970x90" data-custom="true"></gad> -> 970x90 is width and height here
  *  Example AmpAd element = <gad data-ad="AmpHtml" width="320" height="100"></gad>
  * */
 var GoogleAdCustom = {
@@ -11,6 +12,7 @@ var GoogleAdCustom = {
     Ads: null,
     _adTag: 'gad',
     _adAttr: 'data-ad',
+    _customAdAttr: 'data-custom',
 
     Init: function (configFile) {
         this.ConfigFile = configFile;
@@ -99,7 +101,18 @@ var GoogleAdCustom = {
             ad = config.PageLevelAdHtml;
         }
         else {
+            var isCustom = element.getAttribute(this._customAdAttr);
             var adJson = ads[adType];
+
+            if (isCustom) {
+                console.log('bu custom haci')
+                adJson = {
+                    DefaultStyle: false,
+                    Slot: '',
+                    CustomAttribute: ''
+                };
+            }
+            
 
             if (adJson) {
                 ad = config.Html;
