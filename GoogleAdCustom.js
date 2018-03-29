@@ -137,5 +137,3 @@ var GoogleAdCustom = {
         return ad;
     }
 }
-
-GoogleAdCustom.Init('/js/GoogleAdCustom/Config.json');
