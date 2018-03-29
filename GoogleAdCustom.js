@@ -4,48 +4,91 @@
  *  This js only needs Config.json file path
  *  Example ad element = <gad data-ad="970x90"></gad>
  *  Example Custom Ad Element = <gad data-ad="970x90" data-custom="true"></gad> -> 970x90 is width and height here
+ *  You can give data-slot attribute for a custom Slot Id <gad data-ad="970x90" data-slot="234981983"></gad>
  *  Example AmpAd element = <gad data-ad="AmpHtml" width="320" height="100"></gad>
  * */
 var GoogleAdCustom = {
-    ConfigFile:'',
-    Config:null,
-    Ads: null,
+    Config: {
+        Pub: "ca-pub-8229496574777654",
+        Script: "<script async src='//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'></script>",
+        Html: "<ins class='adsbygoogle' style='{style}' data-ad-client='{pub}' data-ad-slot='{slot}' {customAttribute}></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script>",
+        AmpHtml: "<amp-ad width={ampWidth} height={ampHeight} type='adsense' data-ad-client='{pub}'></amp-ad>",
+        PageLevelAdHtml: "<script>(adsbygoogle = window.adsbygoogle || []).push({google_ad_client: '{pub}',enable_page_level_ads: true});</script>",
+        DefaultStyle: "display:block",
+        SizedStyle: "display:inline-block;width:{ssWidth}px;height:{ssHeight}px"
+    },
+    Ads: {
+        MatchedContent: {
+            DefaultStyle: true,
+            Slot: '',
+            CustomAttribute: ''
+        },
+        InFeed: {
+            DefaultStyle: true,
+            Slot: '',
+            CustomAttribute: ''
+        },
+        Responsive: {
+            DefaultStyle: true,
+            Slot: '',
+            CustomAttribute: ''
+        },
+        AutomaticLink: {
+            DefaultStyle: true,
+            Slot: '',
+            CustomAttribute: "data-ad-format='link'"
+        },
+        _970x90: {
+            DefaultStyle: false,
+            Slot: '',
+            CustomAttribute: ''
+        },
+        _728x90: {
+            DefaultStyle: false,
+            Slot: '',
+            CustomAttribute: ''
+        },
+        _336x280: {
+            DefaultStyle: false,
+            Slot: '',
+            CustomAttribute: ''
+        },
+        _300x250: {
+            DefaultStyle: false,
+            Slot: '',
+            CustomAttribute: ''
+        },
+        _300x600: {
+            DefaultStyle: false,
+            Slot: '',
+            CustomAttribute: ''
+        },
+        _200x90: {
+            DefaultStyle: false,
+            Slot: '',
+            CustomAttribute: ''
+        },
+        _320x100: {
+            DefaultStyle: false,
+            Slot: '',
+            CustomAttribute: ''
+        },
+        _468x60: {
+            DefaultStyle: false,
+            Slot: '',
+            CustomAttribute: ''
+        }
+    },
     _adTag: 'gad',
     _adAttr: 'data-ad',
     _customAdAttr: 'data-custom',
+    _slotAdAttr: 'data-slot',
 
-    Init: function (configFile) {
-        this.ConfigFile = configFile;
-        this._GetJson();
-    },
+    Init: function () {
+        var configRes = JSON.stringify(this.Config);
+        this.Config = JSON.parse(configRes.replace(/{pub}/g, this.Config.Pub));
 
-    //Gets Config Json
-    _GetJson: function (requested, res) {
-        if (requested === true)
-        {
-            var json = JSON.parse(res);
-            json = JSON.parse(res.replace(/{pub}/g, json.Config.Pub));
-
-            this.Config = json.Config;
-            this.Ads = json.Ads;
-            this._SetAds();
-        }
-        else
-            this._MakeAjaxRequest(this.ConfigFile);
-    },
-    //Makes Ajax Request without Jquery
-    _MakeAjaxRequest: function (url) {
-        var comp = this;
-        var xmlhttp = new XMLHttpRequest();
-
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == XMLHttpRequest.DONE) {
-                comp._GetJson(true, xmlhttp.response);
-            }
-        };
-
-        xmlhttp.open("GET", url, true);
-        xmlhttp.send();
+        this._SetAds();
     },
 
     _MakeElement: function (htmlString) {
@@ -102,15 +145,19 @@ var GoogleAdCustom = {
         }
         else {
             var isCustom = element.getAttribute(this._customAdAttr);
-            var adJson = ads[adType];
+            var slotGiven = element.getAttribute(this._slotAdAttr);
+            var adJson = adType.indexOf('x') > -1 ? ads['_' + adType] : ads[adType];
 
             if (isCustom) {
-                console.log('bu custom haci')
                 adJson = {
                     DefaultStyle: false,
                     Slot: '',
                     CustomAttribute: ''
                 };
+            }
+
+            if (slotGiven) {
+                adJson.Slot = slotGiven;
             }
             
 
@@ -137,3 +184,5 @@ var GoogleAdCustom = {
         return ad;
     }
 }
+
+GoogleAdCustom.Init();
