@@ -31,6 +31,8 @@ elements and change it with the ad
 
 ```<gad data-ad="970x90" data-slot="123123"></gad>``` => Same as above, data-slot will be used as Slot.
 
+```<gad data-ad="970x90" data-passive="true"></gad>``` => Will not load ad
+
 ```<gad data-ad="970x90" data-custom="true"></gad>``` => Will not look to Config variable for ads properties, 
                                                          takes 970 as width and 90 as height
 
